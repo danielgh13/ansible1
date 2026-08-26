@@ -1,0 +1,15 @@
+# YAML FORMAT example:
+
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: update index repository
+    apt:
+      update_cache: true
+
+  - name: install apache2 package
+    apt:
+      name: apache2

@@ -1,0 +1,24 @@
+
+# ANSIBLE COMMANDS:
+
+1. ansible all -m ping  # check ansible connectivity
+2. ansible all -m gather_facts  # get extra info about all hosts
+3. ansible all -m gather_facts --limit 192.168.X.X  # get extra info on that particular host
+4. ansible all -m apt -a name=vim-nox --become --ask-become-pass  # install vim-nox package on all hosts
+5. ansible all -m apt -a "name=tmux state=latest" --become --ask-become-pass  # !Observe the quotes(extra argument)
+                                                                                update latest version of...(tmux in this case)
+6. ansible all -m apt -a "upgrade=dist" --become --ask-become-pass  # install all updates on all hosts
+
+# CREATING PLAYBOOKS:
+7. nano install_apache.yml  # create/configure/add the apache2 package 
+8. ansible-playbook --ask-become-pass install_apache.yml  # run the command with ansible to push the instalation of apache2 
+                                                            on the selected hosts(inside the file), state: present
+* at this point open a web page and type in your host ip address
+9. cp install_apache.yml remove_apache.yml  # copy and rename the install file - state: absent, used to revert the previous 
+                                              actions along with the next command 
+10. ansible-playbook --ask-become-pass remove_apache.yml  # running this command we remove the apache instalation
+* here we cannot login to that host, we need to run step 8 again in order to be successful.
+--------------------------------------------------
+* all commands to be run in the ansible directory.
+* -m  # module
+* -a  # argument
