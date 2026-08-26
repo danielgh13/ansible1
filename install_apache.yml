@@ -1,7 +1,9 @@
+
 ---
 
 - hosts: all
   become: true
+  gather_facts: false
   tasks:
 
   - name: update repository index
