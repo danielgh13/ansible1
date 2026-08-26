@@ -14,9 +14,9 @@
 8. ansible-playbook --ask-become-pass install_apache.yml  # run the command with ansible to push the instalation of apache2 
                                                             on the selected hosts(inside the file), state: present
 * at this point open a web page and type in your host ip address
-9. cp install_apache.yml remove_apache.yml  # copy and rename the install file - state: absent, used to revert the previous 
-                                              actions along with the next command 
-10. ansible-playbook --ask-become-pass remove_apache.yml  # running this command we remove the apache instalation
+9. cp install_apache.yml remove_apache.yml  # copy and rename the install file (change the state: absent)!
+10. ansible-playbook --ask-become-pass remove_apache.yml  # running this command we remove the apache - revert the
+                                                            previous actions
 * here we cannot login to that host, we need to run step 8 again in order to be successful.
 --------------------------------------------------
 * all commands to be run in the ansible directory.

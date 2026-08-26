@@ -13,3 +13,5 @@
   - name: install apache2 package
     apt:
       name: apache2
+      state: latest
+
