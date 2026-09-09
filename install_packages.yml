@@ -10,19 +10,19 @@
   - name: update repository index
     apt:
       update_cache: true
-    when: ansible_facts['os_family'] == "Demian" 
+    when: ansible_facts['os_family'] == "Debian" 
 
   - name: install apache2 package
     apt:
       name: apache2
       state: latest
-    when: ansible_facts['os_family'] == "Demian"
+    when: ansible_facts['os_family'] == "Debian"
 
   - name: add php support for apache
     apt:
       name: libapache2-mod-php
       state: latest
-    when: ansible_facts['os_family'] == "Demian"
+    when: ansible_facts['os_family'] == "Debian"
 
 #2nd play RedHat family
   - name: update dnf cache

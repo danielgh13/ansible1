@@ -1,0 +1,64 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+#  - name: remove apache2 package
+#    apt:
+#      name: apache2
+#      state: absent
+
+#  - name: install snapd package
+#    apt:
+#      name: snapd
+#      state: absent
+
+#  - name: add php support for apache
+#    apt:
+#      name: libapache2-mod-php
+#      state: absent
+
+# 1st play Demian family
+  - name: update repository index
+    apt:
+      update_cache: true
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: remove apache2 package
+    apt:
+      name: apache2
+      state: absent
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: remove php support for apache
+    apt:
+      name: libapache2-mod-php
+      state: absent
+    when: ansible_facts['os_family'] == "Debian"
+
+# 2nd play RedHat family
+  - name: update dnf cache
+    dnf:
+      update_cache: true
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: remove httpd package
+    dnf:
+      name: httpd
+      state: absent
+    when: ansible_facts['os_family'] == "RedHat"
+
+#  - name: ensure httpd is enabled and started
+  - name: stopped httpd
+    systemd:
+      name: httpd
+      enabled: false     # true to enable
+      state: stopped
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: remove php support for httpd
+    dnf:
+      name: php
+      state: absent
+    when: ansible_facts['os_family'] == "RedHat"
