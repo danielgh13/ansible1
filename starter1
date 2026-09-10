@@ -1,0 +1,74 @@
+
+# WHEN CONDITIONAL
+
+# Basic syntax
+- name: Install Apache on Debian-based systems
+  apt:
+    name: apache2
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+
+# Checking a variable is defined:
+when: my_var is defined
+
+# Checking a variable is undefined:
+when: my_var is not defined
+
+# Boolean check:
+when: my_bool_var
+
+# Comparing values:
+when: ansible_facts['distribution'] == "Ubuntu"
+
+# Multiple conditions (AND) — as a list (each must be true):
+when:
+  - ansible_facts['distribution'] == "Ubuntu"
+  - ansible_facts['distribution_major_version'] == "22"
+# *Or with and:
+when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] == "22"
+
+# OR logic:
+when: ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Debian"
+
+# Negation:
+when: not ansible_facts['distribution'] == "Ubuntu"
+
+# Checking list membership:
+when: ansible_facts['distribution'] in ["Ubuntu", "Debian"]
+
+# Checking the result of a previous task:
+- name: Check if file exists
+  stat:
+    path: /etc/myfile.conf
+  register: file_check
+
+- name: Do something if file exists
+  debug:
+    msg: "File exists!"
+  when: file_check.stat.exists
+
+# When combined with loop, the condition is evaluated per-item:
+- name: Only install if not already in list
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages }}"
+  when: item not in installed_packages
+
+# Using when on blocks
+# *You can apply a single condition to multiple tasks by wrapping them in a block:
+- block:
+    - name: Task 1
+      debug:
+        msg: "Task 1 running"
+    - name: Task 2
+      debug:
+        msg: "Task 2 running"
+  when: ansible_facts['os_family'] == "RedHat"
+
+## Important gotchas
+Facts vs variables: ansible_facts['os_family'] (newer, namespaced) is preferred over the older bare ansible_os_family.
+String vs boolean: If a variable might come in as a string like "true" (e.g., from --extra-vars), use | bool to force proper evaluation: when: my_var | bool.
+Undefined variables cause errors, not silent false — always check is defined first if a variable might not exist.
+when with include_tasks/import_tasks: with import_tasks (static), the when is applied to each imported task individually; with include_tasks (dynamic), it's evaluated once for the include itself.
+

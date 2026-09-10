@@ -3,14 +3,14 @@
 
 - hosts: all
   become: true
-#  gather_facts: false     ##lock, unlock if needed.
+#  gather_facts: false     ##lock/unlock if needed.
   tasks:
 
 #1st play Demian family
   - name: update repository index
     apt:
       update_cache: true
-    when: ansible_facts['os_family'] == "Debian" 
+    when: ansible_facts['os_family'] == "Debian"
 
   - name: install apache2 package
     apt:

@@ -18,6 +18,16 @@
 10. ansible-playbook --ask-become-pass remove_apache.yml  # running this command we remove the apache - revert the
                                                             previous actions
 * here we cannot login to that host, we need to run step 8 again in order to be successful.
+
+# Verify distribution/sever info(on the remote host)
+cat /etc/os release
+
+# Gather facts about a particular server/ansible distribution
+ansible all -m gather_facts --limit 192.168.X.X | grep ansible_distribution
+    OR
+ansible all -m gather_facts --limit rocky1 -i inventory | grep ansible_distribution
+# *use the name of the server and " -i inventory" if first command doesn't work
+
 --------------------------------------------------
 * all commands to be run in the ansible directory.
 * -m  # module
