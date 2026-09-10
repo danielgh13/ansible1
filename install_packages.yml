@@ -6,47 +6,11 @@
 #  gather_facts: false     ##lock/unlock if needed.
   tasks:
 
-#1st play Demian family
-  - name: update repository index
-    apt:
-      update_cache: true
-    when: ansible_facts['os_family'] == "Debian"
-
-  - name: install apache2 package
-    apt:
-      name: apache2
+  - name: install apache and php packages
+    package:
+      name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
       state: latest
-    when: ansible_facts['os_family'] == "Debian"
-
-  - name: add php support for apache
-    apt:
-      name: libapache2-mod-php
-      state: latest
-    when: ansible_facts['os_family'] == "Debian"
-
-#2nd play RedHat family
-  - name: update dnf cache
-    dnf:
-      update_cache: true
-    when: ansible_facts['os_family'] == "RedHat"
-
-  - name: install httpd package
-    dnf:
-      name: httpd
-      state: latest
-    when: ansible_facts['os_family'] == "RedHat"
-
-  - name: ensure httpd is enabled and running
-    systemd:
-      name: httpd
-      enabled: true
-      state: started
-    when: ansible_facts['os_family'] == "RedHat"
-
-  - name: add php support for httpd
-    dnf:
-      name: php
-      state: latest
-    when: ansible_facts['os_family'] == "RedHat"
-
+      update_cache: yes
 

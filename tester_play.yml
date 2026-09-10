@@ -1,0 +1,37 @@
+
+---
+
+- hosts: all
+  become: true
+#  gather_facts: false     ##lock/unlock if needed.
+  tasks:
+
+#1st play Demian family
+
+  - name: install apache and php packages
+    apt:
+      name:
+        - "{{apache_package}}"
+        - "{{php_package}}"
+      state: latest
+      update_cache: true
+
+#2nd play RedHat family
+
+  - name: install httpd and php packages
+    dnf:
+      name:
+        - "{{http_package}}"
+        - "{{php_package}}"
+      state: latest
+      update_cache: yes
+
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: ensure httpd is enabled and running
+    systemd:
+      name: httpd
+      enabled: true
+      state: started
+    when: ansible_facts['os_family'] == "RedHat"
+

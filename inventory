@@ -1,10 +1,11 @@
 
 [ubuntu_servers]
-ubuntu1 ansible_host=192.168.0.149
-ubuntu2 ansible_host=192.168.0.147
+ubuntu1 ansible_host=192.168.0.149 apache_package=apache2 php_package=libapache2-mod-php
+ubuntu2 ansible_host=192.168.0.147 apache_package=apache2 php_package=libapache2-mod-php
+
 
 [rocky_servers]
-rocky1 ansible_host=192.168.0.207 ansible_python_interpreter=/usr/bin/python3
+rocky1 ansible_host=192.168.0.207 apache_package=httpd php_package=php 
 
 [all:vars]
 #
