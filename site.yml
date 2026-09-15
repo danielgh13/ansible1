@@ -1,0 +1,85 @@
+
+---
+
+- hosts: all
+  become: true
+  gather_facts: true     ##lock/unlock if needed.
+  tasks:
+
+  - name: Install updates (Ubuntu)
+    apt:
+      upgrade: yes
+      update_cache: yes
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install updates (Rocky)
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: Install apache and php for Ubuntu servers
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install httpd and php for Rocky servers
+    dnf:
+      name:
+        - httpd
+        - php
+      state: present
+    when: ansible_facts['os_family'] == "RedHat"
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: Install mariadb package (Ubuntu)
+    apt:
+      name: mariadb-servers
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install mariadb package (Rocky)
+    dnf:
+      name: mariadb-server
+      state: present
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: Enable and start mariadb (Rocky)
+    systemd:
+      name: mariadb
+      enabled: yes
+      state: started
+    when: ansible_facts['os_family'] == "RedHat"
+
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: Install samba package (Ubuntu)
+    package:
+      name: samba
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Enable and start samba (Ubuntu)
+    systemd:
+      name: smbd
+      enabled: yes
+      state: started
+    when: ansible_facts['os_family'] == "Debian"
+
+
+...
+
