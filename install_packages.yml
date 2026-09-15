@@ -3,14 +3,25 @@
 
 - hosts: all
   become: true
-#  gather_facts: false     ##lock/unlock if needed.
+  gather_facts: true     ##lock/unlock if needed.
   tasks:
 
-  - name: install apache and php packages
-    package:
+  - name: Install apache and php for Ubuntu servers
+    apt:
       name:
         - "{{ apache_package }}"
         - "{{ php_package }}"
-      state: latest
+      state: present
       update_cache: yes
+    when: ansible_facts['os_family'] == "Debian"
 
+  - name: Install httpd and php for Rocky servers
+    dnf:
+      name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
+      state: present
+      update_cache: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+...
