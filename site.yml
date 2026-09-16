@@ -4,15 +4,17 @@
 - hosts: all
   become: true
   gather_facts: true     ##lock/unlock if needed.
-  tasks:
+  pre_tasks:
 
   - name: Install updates (Ubuntu)
+    tags: always
     apt:
-      upgrade: yes
+      upgrade: dist
       update_cache: yes
     when: ansible_facts['os_family'] == "Debian"
 
   - name: Install updates (Rocky)
+    tags: always
     dnf:
       update_only: yes
       update_cache: yes
@@ -24,6 +26,7 @@
   tasks:
 
   - name: Install apache and php for Ubuntu servers
+    tags: web,ubuntu,apache
     apt:
       name:
         - apache2
@@ -32,6 +35,7 @@
     when: ansible_facts['os_family'] == "Debian"
 
   - name: Install httpd and php for Rocky servers
+    tags: rocky,web,httpd
     dnf:
       name:
         - httpd
@@ -44,23 +48,25 @@
   tasks:
 
   - name: Install mariadb package (Ubuntu)
+    tags: db,ubuntu,mariadb
     apt:
       name: mariadb-servers
       state: present
     when: ansible_facts['os_family'] == "Debian"
 
   - name: Install mariadb package (Rocky)
+    tags: rocky,mariadb,db
     dnf:
       name: mariadb-server
       state: present
     when: ansible_facts['os_family'] == "RedHat"
 
-  - name: Enable and start mariadb (Rocky)
-    systemd:
-      name: mariadb
-      enabled: yes
-      state: started
-    when: ansible_facts['os_family'] == "RedHat"
+#  - name: Enable and start mariadb (Rocky)
+#    systemd:
+#      name: mariadb
+#      enabled: yes
+#      state: started
+#    when: ansible_facts['os_family'] == "RedHat"
 
 
 - hosts: file_servers
@@ -68,17 +74,18 @@
   tasks:
 
   - name: Install samba package (Ubuntu)
+    tags: samba
     package:
       name: samba
       state: present
     when: ansible_facts['os_family'] == "Debian"
 
-  - name: Enable and start samba (Ubuntu)
-    systemd:
-      name: smbd
-      enabled: yes
-      state: started
-    when: ansible_facts['os_family'] == "Debian"
+#  - name: Enable and start samba (Ubuntu)
+#    systemd:
+#      name: smbd
+#      enabled: yes
+#      state: started
+#    when: ansible_facts['os_family'] == "Debian"
 
 
 ...
