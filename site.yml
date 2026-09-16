@@ -43,6 +43,15 @@
       state: present
     when: ansible_facts['os_family'] == "RedHat"
 
+  - name: copy deafult site html for site
+    tags: apache,apache2,httpd
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root   # we would normally set owner and group to www.user for the apache.
+      group: root
+      mode: 0644
+
 - hosts: db_servers
   become: true
   tasks:
