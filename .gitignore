@@ -1,0 +1,18 @@
+
+# SSH keys
+*.pem
+id_rsa*
+id_ed25519*
+*_key
+*.key
+
+# Ansible Vault passwords
+.vault_pass
+vault_pass.txt
+
+# Ansible retry files (clutter, not usually wanted in repo)
+*.retry
+
+# Local inventory overrides if you ever add host-specific secrets
+host_vars/*/vault.yml
+group_vars/*/vault.yml
